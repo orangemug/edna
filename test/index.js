@@ -138,3 +138,31 @@ test('can destroy rules added as plain text', function (t) {
   t.equal(sheet.rules.length, 1);
   t.end();
 });
+
+test('multiple removes', function (t) {
+  var r, sheet = new Edna();
+  var refsA = sheet.add("body", "color: red;");
+  var refsB = sheet.add("body", "color: green;");
+  var refsC = sheet.add("body", "color: blue;");
+
+  sheet.append();
+
+  sheet.remove(refsB);
+  t.equal(sheet.rules.length, 2);
+  t.equal(sheet.sheet.rules.length, 2);
+  t.equal(sheet.sheet.rules[0].cssText, "body { color: red; }");
+  t.equal(sheet.sheet.rules[1].cssText, "body { color: blue; }");
+
+  sheet.add("body", "color: black;");
+  sheet.add("body", "color: yellow;");
+
+  sheet.remove(refsC);
+  t.equal(sheet.rules.length, 3);
+  t.equal(sheet.sheet.rules.length, 3);
+  t.equal(sheet.sheet.rules[0].cssText, "body { color: red; }");
+  t.equal(sheet.sheet.rules[1].cssText, "body { color: black; }");
+  t.equal(sheet.sheet.rules[2].cssText, "body { color: yellow; }");
+
+  t.end();
+});
+

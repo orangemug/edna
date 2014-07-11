@@ -14,6 +14,8 @@ Edna.prototype.add = function() {
   var selector, rules, a = arguments;
   var id, outRefs = [];
 
+  var startIdx = this.rules.length;
+
   if(a.length > 1) {
     selector = a[0];
     rules    = a[1];
@@ -60,6 +62,10 @@ Edna.prototype.add = function() {
     }
   }
 
+  if(this.sheet) {
+    this._addRules(startIdx);
+  }
+
   return outRefs;
 };
 
@@ -89,8 +95,10 @@ Edna.prototype.remove = function(refs) {
  * @param {String} className to add to the resulting stylesheet node
  */
 Edna.prototype.append = function(className) {
+  // We are already in the DOM
+  if(this.sheet) return;
+
   var i, style, sheet;
-  var rules = this.rules;
 
   // Create the node
   var head  = document.getElementsByTagName('head')[0];
@@ -100,17 +108,25 @@ Edna.prototype.append = function(className) {
   head.appendChild(node);
 
   // Get the CSSStyleSheet.
-  this.sheet = sheet = node.sheet;
+  this.sheet = node.sheet;
 
-  for(i=0, len=rules.length; i<len; i++) {
-    style = rules[i];
+  this._addRules();
+  return this;
+}
+
+Edna.prototype._addRules = function(fromIdx) {
+  fromIdx = fromIdx || 0;
+  var rules = this.rules;
+  var sheet = this.sheet;
+
+  for(len=rules.length; fromIdx<len; fromIdx++) {
+    style = rules[fromIdx];
     if(sheet.addRule) {
       sheet.addRule(style.selector, style.rules);
     } else {
       sheet.insertRule(style.selector, style.rules);
     }
   }
-  return this;
 }
 
 /**
