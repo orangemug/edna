@@ -9,13 +9,13 @@ test('append should add to stylesheet to DOM', function (t) {
   t.end();
 });
 
-test('remove should remove stylesheet from the DOM', function (t) {
+test('destroy should remove stylesheet from the DOM', function (t) {
   var sheet = new Edna();
   sheet.append();
 
   // Grab reference to original node
   var node = sheet.sheet.ownerNode;
-  sheet.remove();
+  sheet.destroy();
 
   // Test the node no longer exists in the DOM
   t.notOk(document.head.contains(node));
@@ -55,7 +55,7 @@ test('can add rules as object', function (t) {
 
 test('can add rules as nested object', function (t) {
   var r, sheet = new Edna();
-  sheet.add({
+  var refs = sheet.add({
     "body": {
       "background-color": "orange",
       "header": {
@@ -82,5 +82,59 @@ test('can add rules as nested object', function (t) {
   t.equal(r.selectorText, "body header");
   t.equal(r.style.backgroundColor, "blue");
 
+  t.equal(refs[0], 0);
+  t.equal(refs[1], 1);
+  t.equal(refs[2], 2);
+
+  t.end();
+});
+
+test('can destroy rules added as nested object', function (t) {
+  var r, sheet = new Edna();
+
+  sheet.add({
+    ".test": {"color": "red"}
+  });
+
+  var refs = sheet.add({
+    "body": {
+      "background-color": "orange",
+      "header": {
+        "h1": {
+          "color": "white"
+        },
+        "background-color": "blue"
+      },
+      "color": "white"
+    }
+  });
+
+  sheet.add({
+    ".test": {"color": "blue"}
+  });
+
+  sheet.append();
+  sheet.remove(refs);
+
+  t.equal(sheet.rules.length, 2);
+  t.equal(sheet.sheet.rules.length, 2);
+
+  t.equal(sheet.sheet.rules[0].cssText, ".test { color: red; }");
+  t.equal(sheet.sheet.rules[1].cssText, ".test { color: blue; }");
+
+  t.end();
+});
+
+test('can destroy rules added as plain text', function (t) {
+  var r, sheet = new Edna();
+  var refs = sheet.add("body", "color: blue;");
+
+  sheet.add({
+    ".test": {"color": "blue"}
+  })
+
+  sheet.remove(refs);
+
+  t.equal(sheet.rules.length, 1);
   t.end();
 });

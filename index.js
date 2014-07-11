@@ -2,6 +2,7 @@
  * A small library that will add style to your page, fabolous darling!
  */
 function Edna() {
+  this.uid = 0;
   this.rules = [];
   this.sheet;
 }
@@ -11,6 +12,8 @@ function Edna() {
  */
 Edna.prototype.add = function() {
   var selector, rules, a = arguments;
+  var id, outRefs = [];
+
   if(a.length > 1) {
     selector = a[0];
     rules    = a[1];
@@ -20,10 +23,13 @@ Edna.prototype.add = function() {
   }
 
   if(typeof(rules) === "string") {
+    id = this.uid++;
     this.rules.push({
+      uid: id,
       selector: selector,
       rules: rules
     });
+    outRefs.push(id);
   } else {
     var extractLeafRules = function(rules, rslt, keys) {
       for(var k in rules) {
@@ -44,13 +50,37 @@ Edna.prototype.add = function() {
 
     for(var k in rslt) {
       var v = rslt[k];
+      var id = this.uid++;
       this.rules.push({
+        uid: id,
         selector: k,
         rules: v.join(";")
       });
+      outRefs.push(id);
     }
   }
-  return this;
+
+  return outRefs;
+};
+
+Edna.prototype.remove = function(refs) {
+  var isArr = refs instanceof Array;
+  var offset = 0;
+
+  this.rules = this.rules.filter(function(rule,idx) {
+    if(isArr) {
+      ret = refs.indexOf(rule.uid) < 0;
+    } else {
+      ret = refs !== rule.uid;
+    }
+
+    if(this.sheet && !ret) {
+      this.sheet.deleteRule(idx-offset);
+      offset++;
+    }
+
+    return ret;
+  }, this);
 };
 
 /**
@@ -86,8 +116,8 @@ Edna.prototype.append = function(className) {
 /**
  * Remove the stylesheet from the `<head>`
  */
-Edna.prototype.remove = function() {
-  if(!this.sheet.ownerNode) return;
+Edna.prototype.destroy = function() {
+  if(!this.sheet) return;
   var sheetNode = this.sheet.ownerNode;
   sheetNode.parentNode.removeChild(sheetNode);
   this.sheet = null;

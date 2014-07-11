@@ -24,21 +24,24 @@ Or even deep nest the rules into an object
       }
     });
 
+Both the above return references to the rules added so you can remove them again.
+
+    var ref = sheet.add({"body": {"color": "blue"}});
+    sheet.remove(ref);
+
 Append the stylesheet to the `<head>`.
 
-    edna.append();
-
-You can also provide an `optional-class-name` that will get added to the DOM element
-
-    edna.append("optional-class-name");
+    sheet.append();
+    // => DOMElement
 
 You can remove it from the DOM at anytime.
 
-    edna.remove();
+    sheet.destroy();
+    // => DOMElement
 
 
 ## Credit
-This has the same API as <https://github.com/airportyh/barber>, with the aim to be simplier/smaller.
+This has a simular API to <https://github.com/airportyh/barber>, with the aim to be simplier/smaller (and hence also do less).
 
 
 ## License
