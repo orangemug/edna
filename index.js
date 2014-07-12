@@ -97,7 +97,7 @@ Edna.prototype.remove = function(refs) {
  *
  * @param {String} className to add to the resulting stylesheet node
  */
-Edna.prototype.append = function(className) {
+Edna.prototype.append = function() {
   // We are already in the DOM
   if(this.node) {
     return false;
@@ -109,7 +109,6 @@ Edna.prototype.append = function(className) {
   var head  = document.getElementsByTagName('head')[0];
   var node  = document.createElement('style');
   node.type = 'text/css';
-  node.className = className
   head.appendChild(node);
 
   // Get the CSSStyleSheet.
@@ -127,7 +126,7 @@ Edna.prototype._addRules = function(fromIdx) {
   for(len=rules.length; fromIdx<len; fromIdx++) {
     style = rules[fromIdx];
     if(sheet.insertRule) {
-      sheet.insertRule(style.selector+"{"+style.rules+"}", sheet.cssRules.length);
+      sheet.insertRule(style.selector+" {"+style.rules+"}", sheet.cssRules.length);
     } else {
       sheet.addRule(style.selector, style.rules);
     }
