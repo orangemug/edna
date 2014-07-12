@@ -87,6 +87,9 @@ Edna.prototype.remove = function(refs) {
 
     return ret;
   }, this);
+
+  // Have we removed anything?
+  return (offset > 0);
 };
 
 /**
@@ -96,7 +99,9 @@ Edna.prototype.remove = function(refs) {
  */
 Edna.prototype.append = function(className) {
   // We are already in the DOM
-  if(this.node) return;
+  if(this.node) {
+    return false;
+  }
 
   var i, style, sheet;
 
@@ -111,7 +116,7 @@ Edna.prototype.append = function(className) {
   this.node = node;
 
   this._addRules();
-  return this;
+  return true;
 }
 
 Edna.prototype._addRules = function(fromIdx) {
@@ -133,10 +138,10 @@ Edna.prototype._addRules = function(fromIdx) {
  * Remove the stylesheet from the `<head>`
  */
 Edna.prototype.destroy = function() {
-  if(!this.node) return;
+  if(!this.node) return false;
   this.node.parentNode.removeChild(this.node);
   this.node = null;
-  return this;
+  return true;
 }
 
 module.exports = Edna;

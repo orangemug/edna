@@ -171,3 +171,37 @@ test('multiple removes', function (t) {
   t.end();
 });
 
+test('#append returns true when not yet added to DOM', function(t) {
+  var sheet = new Edna();
+  sheet.add("body", "color: blue;");
+  var ret = sheet.append();
+  t.equal(ret, true);
+  t.end();
+});
+
+test('#append returns false when already added to DOM', function(t) {
+  var sheet = new Edna();
+  sheet.add("body", "color: blue;");
+  sheet.append();
+  var ret = sheet.append();
+  t.equal(ret, false);
+  t.end();
+});
+
+test('#destroy returns true when already added to DOM', function(t) {
+  var sheet = new Edna();
+  sheet.add("body", "color: blue;");
+  sheet.append();
+  var ret = sheet.destroy();
+  t.equal(ret, true);
+  t.end();
+});
+
+test('#destroy returns false when not yet added to DOM', function(t) {
+  var sheet = new Edna();
+  sheet.add("body", "color: blue;");
+  var ret = sheet.destroy();
+  t.equal(ret, false);
+  t.end();
+});
+

@@ -26,18 +26,19 @@ Or even deep nest the rules into an object
 
 Both the above return references to the rules added so you can remove them again.
 
-    var ref = sheet.add({"body": {"color": "blue"}});
-    sheet.remove(ref);
+    var refs = sheet.add({"body": {"color": "blue"}});
+    sheet.remove(refs);
+    // => true - if there was anything removed.
 
 Append the stylesheet to the `<head>`.
 
     sheet.append();
-    // => DOMElement
+    // => true - if added to DOM
 
 You can remove it from the DOM at anytime.
 
     sheet.destroy();
-    // => DOMElement
+    // => true - if removed from DOM
 
 
 ## Credit
