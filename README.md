@@ -1,5 +1,8 @@
-# Edna
+# Edna [![Build Status](https://travis-ci.org/orangemug/edna.svg?branch=master)](https://travis-ci.org/orangemug/edna)
 A small library that will add style to your page fabolous darling!
+
+
+[![browser support](https://ci.testling.com/orangemug/edna.png)](https://ci.testling.com/orangemug/edna)
 
 **WORK IN PROGRESS**
 
