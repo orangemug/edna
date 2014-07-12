@@ -4,7 +4,7 @@
 function Edna() {
   this.uid = 0;
   this.rules = [];
-  this.sheet;
+  this.node;
 }
 
 /**
@@ -62,7 +62,7 @@ Edna.prototype.add = function() {
     }
   }
 
-  if(this.sheet) {
+  if(this.node) {
     this._addRules(startIdx);
   }
 
@@ -80,8 +80,8 @@ Edna.prototype.remove = function(refs) {
       ret = refs !== rule.uid;
     }
 
-    if(this.sheet && !ret) {
-      this.sheet.deleteRule(idx-offset);
+    if(this.node && !ret) {
+      this.node.sheet.deleteRule(idx-offset);
       offset++;
     }
 
@@ -96,7 +96,7 @@ Edna.prototype.remove = function(refs) {
  */
 Edna.prototype.append = function(className) {
   // We are already in the DOM
-  if(this.sheet) return;
+  if(this.node) return;
 
   var i, style, sheet;
 
@@ -108,7 +108,7 @@ Edna.prototype.append = function(className) {
   head.appendChild(node);
 
   // Get the CSSStyleSheet.
-  this.sheet = node.sheet;
+  this.node = node;
 
   this._addRules();
   return this;
@@ -117,7 +117,7 @@ Edna.prototype.append = function(className) {
 Edna.prototype._addRules = function(fromIdx) {
   fromIdx = fromIdx || 0;
   var rules = this.rules;
-  var sheet = this.sheet;
+  var sheet = this.node.sheet;
 
   for(len=rules.length; fromIdx<len; fromIdx++) {
     style = rules[fromIdx];
@@ -133,10 +133,9 @@ Edna.prototype._addRules = function(fromIdx) {
  * Remove the stylesheet from the `<head>`
  */
 Edna.prototype.destroy = function() {
-  if(!this.sheet) return;
-  var sheetNode = this.sheet.ownerNode;
-  sheetNode.parentNode.removeChild(sheetNode);
-  this.sheet = null;
+  if(!this.node) return;
+  this.node.parentNode.removeChild(this.node);
+  this.node = null;
   return this;
 }
 

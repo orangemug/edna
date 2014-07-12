@@ -4,7 +4,7 @@ var Edna = require("../");
 test('append should add to stylesheet to DOM', function (t) {
   var node, sheet = new Edna();
   sheet.append();
-  node = sheet.sheet.ownerNode;
+  node = sheet.node.sheet.ownerNode;
   t.ok(document.head.contains(node));
   t.end();
 });
@@ -14,12 +14,12 @@ test('destroy should remove stylesheet from the DOM', function (t) {
   sheet.append();
 
   // Grab reference to original node
-  var node = sheet.sheet.ownerNode;
+  var node = sheet.node;
   sheet.destroy();
 
   // Test the node no longer exists in the DOM
   t.notOk(document.head.contains(node));
-  t.notOk(sheet.sheet);
+  t.notOk(sheet.node);
 
   t.end();
 });
@@ -29,7 +29,7 @@ test('can add rules as string', function (t) {
   sheet.add("body", "background-color: orange; color: white;");
   sheet.append();
 
-  r = sheet.sheet.rules[0];
+  r = sheet.node.sheet.rules[0];
   t.equal(r.selectorText, "body");
   t.equal(r.style.backgroundColor, "orange");
   t.equal(r.style.color, "white");
@@ -38,14 +38,14 @@ test('can add rules as string', function (t) {
 });
 
 test('can add rules as object', function (t) {
-  var r, sheet = new Edna();
+  var r, nodeSheet, sheet = new Edna();
   sheet.add("body", {
     "background-color": "orange",
     "color": "white"
   });
   sheet.append();
 
-  r = sheet.sheet.rules[0];
+  r = sheet.node.sheet.rules[0];
   t.equal(r.selectorText, "body");
   t.equal(r.style.backgroundColor, "orange");
   t.equal(r.style.color, "white");
@@ -54,7 +54,7 @@ test('can add rules as object', function (t) {
 });
 
 test('can add rules as nested object', function (t) {
-  var r, sheet = new Edna();
+  var r, nodeSheet, sheet = new Edna();
   var refs = sheet.add({
     "body": {
       "background-color": "orange",
@@ -69,16 +69,18 @@ test('can add rules as nested object', function (t) {
   });
   sheet.append();
 
-  r = sheet.sheet.rules[0];
+  nodeSheet = sheet.node.sheet;
+
+  r = nodeSheet.rules[0];
   t.equal(r.selectorText, "body");
   t.equal(r.style.backgroundColor, "orange");
   t.equal(r.style.color, "white");
 
-  r = sheet.sheet.rules[1];
+  r = nodeSheet.rules[1];
   t.equal(r.selectorText, "body header h1");
   t.equal(r.style.color, "white");
 
-  r = sheet.sheet.rules[2];
+  r = nodeSheet.rules[2];
   t.equal(r.selectorText, "body header");
   t.equal(r.style.backgroundColor, "blue");
 
@@ -90,7 +92,7 @@ test('can add rules as nested object', function (t) {
 });
 
 test('can destroy rules added as nested object', function (t) {
-  var r, sheet = new Edna();
+  var r, nodeSheet, sheet = new Edna();
 
   sheet.add({
     ".test": {"color": "red"}
@@ -116,11 +118,13 @@ test('can destroy rules added as nested object', function (t) {
   sheet.append();
   sheet.remove(refs);
 
-  t.equal(sheet.rules.length, 2);
-  t.equal(sheet.sheet.rules.length, 2);
+  nodeSheet = sheet.node.sheet;
 
-  t.equal(sheet.sheet.rules[0].cssText, ".test { color: red; }");
-  t.equal(sheet.sheet.rules[1].cssText, ".test { color: blue; }");
+  t.equal(sheet.rules.length, 2);
+  t.equal(nodeSheet.rules.length, 2);
+
+  t.equal(nodeSheet.rules[0].cssText, ".test { color: red; }");
+  t.equal(nodeSheet.rules[1].cssText, ".test { color: blue; }");
 
   t.end();
 });
@@ -140,28 +144,29 @@ test('can destroy rules added as plain text', function (t) {
 });
 
 test('multiple removes', function (t) {
-  var r, sheet = new Edna();
+  var r, nodeSheet, sheet = new Edna();
   var refsA = sheet.add("body", "color: red;");
   var refsB = sheet.add("body", "color: green;");
   var refsC = sheet.add("body", "color: blue;");
 
   sheet.append();
+  nodeSheet = sheet.node.sheet;
 
   sheet.remove(refsB);
   t.equal(sheet.rules.length, 2);
-  t.equal(sheet.sheet.rules.length, 2);
-  t.equal(sheet.sheet.rules[0].cssText, "body { color: red; }");
-  t.equal(sheet.sheet.rules[1].cssText, "body { color: blue; }");
+  t.equal(nodeSheet.rules.length, 2);
+  t.equal(nodeSheet.rules[0].cssText, "body { color: red; }");
+  t.equal(nodeSheet.rules[1].cssText, "body { color: blue; }");
 
   sheet.add("body", "color: black;");
   sheet.add("body", "color: yellow;");
 
   sheet.remove(refsC);
   t.equal(sheet.rules.length, 3);
-  t.equal(sheet.sheet.rules.length, 3);
-  t.equal(sheet.sheet.rules[0].cssText, "body { color: red; }");
-  t.equal(sheet.sheet.rules[1].cssText, "body { color: black; }");
-  t.equal(sheet.sheet.rules[2].cssText, "body { color: yellow; }");
+  t.equal(nodeSheet.rules.length, 3);
+  t.equal(nodeSheet.rules[0].cssText, "body { color: red; }");
+  t.equal(nodeSheet.rules[1].cssText, "body { color: black; }");
+  t.equal(nodeSheet.rules[2].cssText, "body { color: yellow; }");
 
   t.end();
 });
