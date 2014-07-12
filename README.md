@@ -1,6 +1,8 @@
 # Edna
 A small library that will add style to your page fabolous darling!
 
+**WORK IN PROGRESS**
+
 ## Usage
 Create a stylesheet
 
