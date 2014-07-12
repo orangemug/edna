@@ -126,10 +126,10 @@ Edna.prototype._addRules = function(fromIdx) {
 
   for(len=rules.length; fromIdx<len; fromIdx++) {
     style = rules[fromIdx];
-    if(sheet.addRule) {
-      sheet.addRule(style.selector, style.rules);
+    if(sheet.insertRule) {
+      sheet.insertRule(style.selector+"{"+style.rules+"}", sheet.cssRules.length);
     } else {
-      sheet.insertRule(style.selector, style.rules);
+      sheet.addRule(style.selector, style.rules);
     }
   }
 }
