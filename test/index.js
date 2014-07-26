@@ -205,3 +205,27 @@ test('#destroy returns false when not yet added to DOM', function(t) {
   t.end();
 });
 
+test('#clear removes all rules and returns true', function(t) {
+  var ret, nodeSheet, sheet = new Edna();
+  sheet.add("h1", "color: red;");
+  sheet.add("h2", "color: green;");
+  sheet.add("h3", "color: blue;");
+  sheet.append();
+
+  nodeSheet = sheet.node.sheet;
+
+  ret = sheet.clear();
+  t.equal(sheet.rules.length, 0);
+  t.equal(nodeSheet.cssRules.length, 0);
+  t.equal(ret, true);
+
+  t.end();
+});
+
+test('#clear with no rules returns false', function(t) {
+  var ret, sheet = new Edna();
+  ret = sheet.clear();
+  t.equal(ret, false);
+  t.end();
+});
+

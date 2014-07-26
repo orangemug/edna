@@ -69,6 +69,23 @@ Edna.prototype.add = function() {
   return outRefs;
 };
 
+Edna.prototype.clear = function() {
+  var offset = 0;
+
+  if(this.rules.length < 1) {
+    return false;
+  }
+
+  this.rules.forEach(function(rule,idx) {
+    this.node.sheet.deleteRule(idx-offset);
+    offset++;
+  }, this);
+
+  this.rules = [];
+
+  return true;
+};
+
 Edna.prototype.remove = function(refs) {
   var isArr = refs instanceof Array;
   var offset = 0;
