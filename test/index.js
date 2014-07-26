@@ -171,6 +171,20 @@ test('multiple removes', function (t) {
   t.end();
 });
 
+test('can remove ref as single value', function (t) {
+  var r, sheet = new Edna();
+  var refs = sheet.add("body", "color: blue;");
+
+  sheet.add({
+    ".test": {"color": "blue"}
+  })
+
+  sheet.remove(refs[0]);
+
+  t.equal(sheet.rules.length, 1);
+  t.end();
+});
+
 test('#append returns true when not yet added to DOM', function(t) {
   var sheet = new Edna();
   sheet.add("body", "color: blue;");
