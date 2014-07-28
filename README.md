@@ -35,6 +35,10 @@ Both the above return references to the rules added so you can remove them again
     sheet.remove(refs);
     // => true - if there was anything removed.
 
+Clear all rules
+
+    sheet.clear();
+
 Append the stylesheet to the `<head>`.
 
     sheet.append();
