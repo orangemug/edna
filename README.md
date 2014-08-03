@@ -4,7 +4,6 @@ A small library that will add style to your page fabolous darling!
 
 [![browser support](https://ci.testling.com/orangemug/edna.png)](https://ci.testling.com/orangemug/edna)
 
-**WORK IN PROGRESS**
 
 ## Usage
 Create a stylesheet
@@ -13,7 +12,7 @@ Create a stylesheet
 
 Add some styles in various ways, string or object
 
-    sheet.add(".selector", {"background-color": "blue"});
+    sheet.add(".selector", "color: white"});
     sheet.add(".selector", {
       "background-color": "orange"
     });
@@ -22,16 +21,16 @@ Or even deep nest the rules into an object
 
     sheet.add({
       "body": {
-        "color": "orange"
+        "background-color": "orange"
         "h1": {
-          "background-color": "white"
+          "color": "white"
         }
       }
     });
 
 Both the above return references to the rules added so you can remove them again.
 
-    var refs = sheet.add({"body": {"color": "blue"}});
+    var refs = sheet.add({"body": {"color": "orange"}});
     sheet.remove(refs);
     // => true - if there was anything removed.
 
