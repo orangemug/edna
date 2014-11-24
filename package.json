@@ -7,9 +7,13 @@
   "devDependencies": {
     "tape": "~2.3.2",
     "browserify": "~3.24.1",
-    "testling": "~1.5.8"
+    "testling": "~1.5.8",
+    "blanket": "^1.1.6",
+    "mocha": "^2.0.1",
+    "mocha-term-cov-reporter": "^0.2.0" 
   },
   "testling": {
+    "harness": "mocha",
     "files": "test/index.js",
     "browsers": [
       "ie/6..latest",
