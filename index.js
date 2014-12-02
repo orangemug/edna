@@ -1,3 +1,5 @@
+var objLeaves = require("obj-leaves");
+
 /**
  * A small library that will add style to your page, fabolous darling!
  */
@@ -33,22 +35,15 @@ Edna.prototype.add = function() {
     });
     outRefs.push(id);
   } else {
-    var extractLeafRules = function(rules, rslt, keys) {
-      for(var k in rules) {
-        if(rules.hasOwnProperty(k)) {
-          v = rules[k];
-          if(typeof(v) === "string") {
-            rslt[keys] = rslt[keys] || [];
-            rslt[keys].push(k+":"+v);
-          } else {
-            extractLeafRules(v, rslt, keys+" "+k);
-          }
-        }
-      }
-    }
-
     var rslt = {};
-    extractLeafRules(rules, rslt, selector);
+    objLeaves(rules, function(keyPath, v) {
+      var attr = keyPath.pop();
+      if(keyPath.length > 0) {
+        var selector = keyPath.join(" ");
+        rslt[selector] = rslt[selector] || [];
+        rslt[selector].push(attr+":"+v);
+      }
+    }, [selector]);
 
     for(var k in rslt) {
       var v = rslt[k];
