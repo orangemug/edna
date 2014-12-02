@@ -35,6 +35,6 @@
   "homepage": "https://github.com/orangemug/edna",
   "license": "MIT",
   "dependencies": {
-    "obj-leaves": "git+ssh://git@github.com:orangemug/obj-leaves.git#master"
+    "obj-leaves": "git://github.com/orangemug/obj-leaves.git"
   }
 }
