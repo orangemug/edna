@@ -2,9 +2,6 @@
 A small library that will add style to your page fabolous darling!
 
 
-[![browser support](https://ci.testling.com/orangemug/edna.png)](https://ci.testling.com/orangemug/edna)
-
-
 ## Usage
 Create a stylesheet
 
