@@ -9,7 +9,7 @@ Create a stylesheet
 
 Add some styles in various ways, string or object
 
-    sheet.add(".selector", "color: white"});
+    sheet.add(".selector", {"color: white"});
     sheet.add(".selector", {
       "background-color": "orange"
     });
